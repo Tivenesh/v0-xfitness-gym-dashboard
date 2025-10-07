@@ -19,8 +19,8 @@ export function DashboardSidebar() {
   const pathname = usePathname()
 
   return (
-    <aside className="w-60 bg-card border-r border-border flex flex-col">
-      <div className="p-6 border-b border-border">
+    <aside className="w-60 bg-black border-r border-white/10 flex flex-col">
+      <div className="p-6 border-b border-white/10">
         <Link href="/dashboard" className="flex items-center justify-center">
           <Image
             src="/xfitness-logo.jpg"
@@ -43,10 +43,10 @@ export function DashboardSidebar() {
               key={item.name}
               href={item.href}
               className={cn(
-                "flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
+                "flex items-center gap-3 px-3 py-2 rounded-none text-sm font-bold uppercase tracking-wide transition-all",
                 isActive
-                  ? "bg-primary text-primary-foreground"
-                  : "text-muted-foreground hover:bg-muted hover:text-foreground",
+                  ? "bg-primary text-black shadow-[0_0_20px_rgba(252,211,77,0.3)]"
+                  : "text-white/70 hover:bg-white/5 hover:text-primary",
               )}
             >
               <Icon className="w-5 h-5" />

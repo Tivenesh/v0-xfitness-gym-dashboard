@@ -24,9 +24,9 @@ const chartConfig = {
 
 export function MembershipTrends() {
   return (
-    <Card className="bg-card border-border">
+    <Card className="bg-black border-2 border-white/10 hover:border-primary/50 transition-all rounded-none">
       <CardHeader>
-        <CardTitle className="text-foreground">Membership Trends</CardTitle>
+        <CardTitle className="text-white font-black uppercase tracking-wide">Membership Trends</CardTitle>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig} className="h-[300px] w-full">
@@ -37,16 +37,10 @@ export function MembershipTrends() {
                 <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0.1} />
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-            <XAxis
-              dataKey="month"
-              stroke="hsl(var(--muted-foreground))"
-              fontSize={12}
-              tickLine={false}
-              axisLine={false}
-            />
+            <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
+            <XAxis dataKey="month" stroke="rgba(255,255,255,0.5)" fontSize={12} tickLine={false} axisLine={false} />
             <YAxis
-              stroke="hsl(var(--muted-foreground))"
+              stroke="rgba(255,255,255,0.5)"
               fontSize={12}
               tickLine={false}
               axisLine={false}
@@ -57,7 +51,7 @@ export function MembershipTrends() {
               type="monotone"
               dataKey="members"
               stroke="hsl(var(--primary))"
-              strokeWidth={2}
+              strokeWidth={3}
               fillOpacity={1}
               fill="url(#fillMembers)"
             />

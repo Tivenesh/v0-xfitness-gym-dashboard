@@ -31,28 +31,31 @@ const recentSignups = [
 
 export function RecentSignups() {
   return (
-    <Card className="bg-card border-border">
+    <Card className="bg-black border-2 border-white/10 hover:border-primary/50 transition-all rounded-none">
       <CardHeader>
-        <CardTitle className="text-foreground">Recent Signups</CardTitle>
+        <CardTitle className="text-white font-black uppercase tracking-wide">Recent Signups</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
           {recentSignups.map((signup) => (
-            <div key={signup.name} className="flex items-center gap-3">
-              <Avatar className="h-10 w-10">
+            <div
+              key={signup.name}
+              className="flex items-center gap-3 p-2 hover:bg-white/5 transition-colors rounded-none"
+            >
+              <Avatar className="h-10 w-10 border-2 border-primary/30">
                 <AvatarImage src={signup.avatar || "/placeholder.svg"} alt={signup.name} />
-                <AvatarFallback>{signup.name.charAt(0)}</AvatarFallback>
+                <AvatarFallback className="bg-primary text-black font-bold">{signup.name.charAt(0)}</AvatarFallback>
               </Avatar>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-foreground truncate">{signup.name}</p>
-                <p className="text-xs text-muted-foreground">{signup.plan}</p>
+                <p className="text-sm font-bold text-white truncate">{signup.name}</p>
+                <p className="text-xs text-white/50">{signup.plan}</p>
               </div>
               <Badge
                 variant={signup.status === "Active" ? "default" : "destructive"}
                 className={
                   signup.status === "Active"
-                    ? "bg-green-500/10 text-green-500 hover:bg-green-500/20"
-                    : "bg-red-500/10 text-red-500 hover:bg-red-500/20"
+                    ? "bg-primary/20 text-primary border border-primary/50 hover:bg-primary/30 rounded-none font-bold"
+                    : "bg-red-500/20 text-red-500 border border-red-500/50 hover:bg-red-500/30 rounded-none font-bold"
                 }
               >
                 {signup.status}

@@ -38,14 +38,19 @@ export function StatsCards() {
       {stats.map((stat) => {
         const Icon = stat.icon
         return (
-          <Card key={stat.title} className="bg-card border-border">
+          <Card
+            key={stat.title}
+            className="bg-black border-2 border-white/10 hover:border-primary/50 transition-all hover:shadow-[0_0_20px_rgba(252,211,77,0.2)] rounded-none"
+          >
             <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">{stat.title}</CardTitle>
-              <Icon className="w-4 h-4 text-muted-foreground" />
+              <CardTitle className="text-sm font-bold uppercase tracking-wide text-white/70">{stat.title}</CardTitle>
+              <Icon className="w-5 h-5 text-primary" />
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-foreground">{stat.value}</div>
-              <p className={`text-xs mt-1 ${stat.trend === "up" ? "text-green-500" : "text-red-500"}`}>{stat.change}</p>
+              <div className="text-4xl font-black text-white">{stat.value}</div>
+              <p className={`text-xs mt-1 font-bold ${stat.trend === "up" ? "text-primary" : "text-red-500"}`}>
+                {stat.change}
+              </p>
             </CardContent>
           </Card>
         )

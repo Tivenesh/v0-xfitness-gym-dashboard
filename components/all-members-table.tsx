@@ -37,38 +37,38 @@ const members = [
 
 export function AllMembersTable() {
   return (
-    <Card className="bg-card border-border">
+    <Card className="bg-black border-2 border-white/10 hover:border-primary/50 transition-all rounded-none">
       <CardHeader>
-        <CardTitle className="text-foreground">All Members</CardTitle>
+        <CardTitle className="text-white font-black uppercase tracking-wide">All Members</CardTitle>
       </CardHeader>
       <CardContent>
         <Table>
           <TableHeader>
-            <TableRow className="border-border hover:bg-transparent">
-              <TableHead className="text-muted-foreground">Member</TableHead>
-              <TableHead className="text-muted-foreground">Plan</TableHead>
-              <TableHead className="text-muted-foreground">Status</TableHead>
-              <TableHead className="text-muted-foreground">Join Date</TableHead>
+            <TableRow className="border-white/10 hover:bg-transparent">
+              <TableHead className="text-white/70 font-bold uppercase text-xs">Member</TableHead>
+              <TableHead className="text-white/70 font-bold uppercase text-xs">Plan</TableHead>
+              <TableHead className="text-white/70 font-bold uppercase text-xs">Status</TableHead>
+              <TableHead className="text-white/70 font-bold uppercase text-xs">Join Date</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {members.map((member) => (
-              <TableRow key={member.name} className="border-border">
-                <TableCell className="font-medium text-foreground">{member.name}</TableCell>
-                <TableCell className="text-muted-foreground">{member.plan}</TableCell>
+              <TableRow key={member.name} className="border-white/10 hover:bg-white/5 transition-colors">
+                <TableCell className="font-bold text-white">{member.name}</TableCell>
+                <TableCell className="text-white/70">{member.plan}</TableCell>
                 <TableCell>
                   <Badge
                     variant={member.status === "Active" ? "default" : "destructive"}
                     className={
                       member.status === "Active"
-                        ? "bg-green-500/10 text-green-500 hover:bg-green-500/20"
-                        : "bg-red-500/10 text-red-500 hover:bg-red-500/20"
+                        ? "bg-primary/20 text-primary border border-primary/50 hover:bg-primary/30 rounded-none font-bold"
+                        : "bg-red-500/20 text-red-500 border border-red-500/50 hover:bg-red-500/30 rounded-none font-bold"
                     }
                   >
                     {member.status}
                   </Badge>
                 </TableCell>
-                <TableCell className="text-muted-foreground">{member.joinDate}</TableCell>
+                <TableCell className="text-white/70">{member.joinDate}</TableCell>
               </TableRow>
             ))}
           </TableBody>
