@@ -124,7 +124,6 @@
   }
 }
 
-
 #loading-screen {
   position: fixed;
   top: 0;
@@ -140,20 +139,24 @@
 }
 
 .loading-logo {
-  animation: rotateLogo 3s linear forwards;
-  width: 150px; 
+  width: 150px;
   height: auto;
-  z-index: 1000; /* Ensures logo is above doors */
+  z-index: 1000;
+  /* Add the new breathing animation */
+  animation: breathingGlow 3s ease-in-out forwards;
+  border-radius: 50%; /* Helps the glow look more natural */
 }
 
-@keyframes rotateLogo {
-  from {
-    transform: rotate(0deg);
+/* New animation for the breathing glow effect */
+@keyframes breathingGlow {
+  0%, 100% {
+    box-shadow: 0 0 20px 0px rgba(252, 211, 77, 0.4);
   }
-  to {
-    transform: rotate(360deg);
+  50% {
+    box-shadow: 0 0 40px 10px rgba(252, 211, 77, 0.8);
   }
 }
+
 
 .door {
   position: absolute;
@@ -162,7 +165,7 @@
   height: 100%;
   background-color: #000;
   transition: transform 1s ease-in-out;
-  z-index: 999; /* Below the logo */
+  z-index: 999; 
 }
 
 .door-left {

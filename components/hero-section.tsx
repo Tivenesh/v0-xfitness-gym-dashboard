@@ -34,13 +34,32 @@ export function HeroSection() {
     >
       <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black" />
       <div className="absolute inset-0 z-0">
+        {/* First glowing circle - breathing effect */}
         <motion.div
           className="absolute top-1/4 left-1/4 w-96 h-96 bg-yellow-400/20 rounded-full blur-[120px]"
-          animate={{ scale: [1, 1.1, 1], transition: { duration: 5, repeat: Infinity } }}
+          animate={{
+            scale: [1, 1.05, 1], // Pulsate scale slightly
+            opacity: [0.2, 0.3, 0.2], // Pulsate opacity
+            transition: {
+              duration: 4, // Duration of one breath cycle
+              repeat: Infinity, // Repeat indefinitely
+              ease: "easeInOut", // Smooth in and out
+            },
+          }}
         />
+        {/* Second glowing circle - breathing effect */}
         <motion.div
           className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-yellow-400/10 rounded-full blur-[120px]"
-          animate={{ scale: [1, 1.2, 1], transition: { duration: 6, repeat: Infinity, delay: 1 } }}
+          animate={{
+            scale: [1, 1.1, 1], // Pulsate scale slightly, maybe a bit more than the first
+            opacity: [0.1, 0.2, 0.1], // Pulsate opacity
+            transition: {
+              duration: 5, // Slightly different duration for variety
+              repeat: Infinity,
+              delay: 1, // Start a bit later than the first
+              ease: "easeInOut",
+            },
+          }}
         />
       </div>
 
