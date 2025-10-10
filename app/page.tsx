@@ -1,5 +1,3 @@
-// In: app/page.tsx
-
 "use client";
 
 import { useState, useEffect, type ReactNode } from 'react';
@@ -19,7 +17,7 @@ const features = [
   { name: "Modern Female Toilet", image: "/femaletoilet.jpeg" },
 ];
 
-// Data for membership plans (Re-defined for clarity and to include all necessary data)
+// Data for membership plans
 const membershipPlans = [
     {
         name: "1 Month",
@@ -83,7 +81,7 @@ const letterVariants = {
 
 // Helper component to apply animation to a string of text
 const AnimatedLetters = ({ text }: { text: string }) => {
-  const words = text.split(" "); // Split text into words
+  const words = text.split(" "); 
 
   return (
     <motion.span
@@ -94,7 +92,7 @@ const AnimatedLetters = ({ text }: { text: string }) => {
       viewport={{ once: true, amount: 0.8 }}
     >
       {words.map((word, wordIndex) => (
-        <span key={wordIndex} className="inline-block whitespace-nowrap"> {/* Keep words together */}
+        <span key={wordIndex} className="inline-block whitespace-nowrap">
           {Array.from(word).map((letter, letterIndex) => (
             <motion.span
               key={`${wordIndex}-${letterIndex}`}
@@ -104,7 +102,6 @@ const AnimatedLetters = ({ text }: { text: string }) => {
               {letter}
             </motion.span>
           ))}
-          {/* Add a non-breaking space after each word, except the last one */}
           {wordIndex < words.length - 1 && "\u00A0"}
         </span>
       ))}
@@ -186,7 +183,7 @@ const MembershipModal = ({ plan, onClose }: { plan: Plan | null, onClose: () => 
           )}
 
           {/* Close Button (top right for better UX) */}
-           <button
+            <button
                 onClick={onClose}
                 className="absolute top-4 right-4 text-white/50 hover:text-yellow-400 transition-colors z-20"
                 aria-label="Close"
@@ -274,6 +271,7 @@ export default function Home() {
       {isAnimationActive && (
         <div id="loading-screen" className={isOpening ? 'opening' : ''}>
           <div className="door-left door"></div>
+          {/* Note: Standard <img> for static logo outside of main content for simplicity */}
           <img src="/XFitnesslogonob.png" className="loading-logo" alt="XFitness Logo" />
           <div className="door-right door"></div>
         </div>
@@ -290,40 +288,6 @@ export default function Home() {
           <div className="absolute inset-0 bg-black/60" />
         </div>
 
-        {/* Navigation (unchanged) */}
-        <nav className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-sm border-b border-yellow-400/20">
-          <div className="container mx-auto px-6 py-4">
-            <div className="flex items-center">
-              {/* Left Side */}
-              <div className="flex-1 flex justify-start">
-                  <a href="/" className="flex items-center gap-3">
-                    <img src="/XFitnesslogonob.png" alt="XFitness" width={120} height={40} className="h-10 w-auto" />
-                  </a>
-              </div>
-
-              {/* Center Menu */}
-              <div className="hidden md:flex items-center gap-8">
-                <a href="#features" className="text-white hover:text-yellow-400 transition-colors font-bold uppercase text-sm tracking-wide">Features</a>
-                <a href="#app" className="text-white hover:text-yellow-400 transition-colors font-bold uppercase text-sm tracking-wide">App</a>
-                <a href="#membership" className="text-white hover:text-yellow-400 transition-colors font-bold uppercase text-sm tracking-wide">Membership</a>
-                <a href="#locations" className="text-white hover:text-yellow-400 transition-colors font-bold uppercase text-sm tracking-wide">Location</a>
-                <a href="#about" className="text-white hover:text-yellow-400 transition-colors font-bold uppercase text-sm tracking-wide">About</a>
-              </div>
-
-              {/* Right Side */}
-              <div className="flex-1 flex justify-end">
-                <div className="flex items-center gap-4">
-                    <a href="/login">
-                      <Button variant="ghost" className="text-white hover:text-primary hover:bg-white/5 font-bold uppercase">Log In</Button>
-                    </a>
-                    <a href="/download">
-                      <Button className="bg-yellow-400 text-black hover:bg-yellow-500 font-black uppercase shadow-[0_0_20px_rgba(252,211,77,0.3)] hover:shadow-[0_0_30px_rgba(252,211,77,0.5)] transition-all">Join Now</Button>
-                    </a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </nav>
 
         <div className="relative z-10">
           {/* Hero Section (unchanged) */}
@@ -426,9 +390,9 @@ export default function Home() {
                   <h2 className="text-5xl md:text-6xl font-black text-white uppercase leading-tight">
                     <AnimatedLetters text="Your " />
                     <span className="text-yellow-400">
-                      <AnimatedLetters text="Fitness App" />
+                      <AnimatedLetters text="Fitness App." />
                     </span>
-                    <AnimatedLetters text=". Integrated." />
+                     <AnimatedLetters text=" Integrated." />
                   </h2>
                   <p className="text-lg text-white/80 leading-relaxed">
                     Manage your membership, track your workouts, book classes, and access the gym 24/7—all from our seamless mobile application.
@@ -443,38 +407,36 @@ export default function Home() {
                 </div>
                 <div className="flex justify-center items-center">
                     <div className="relative mx-auto bg-zinc-900 border-4 border-zinc-800 rounded-[54px] h-[640px] w-[320px] shadow-2xl shadow-yellow-400/10">
-                      <div className="relative w-full h-full overflow-hidden rounded-[46px] bg-black">
-                          <div className="absolute top-2.5 left-1/2 -translate-x-1/2 h-7 bg-black z-10 flex justify-center items-center rounded-full w-28"></div>
-                          <div className="absolute inset-0 flex items-center justify-center bg-black z-0">
-                              <motion.div
-                                  initial={{ opacity: 0, scale: 0.8 }}
-                                  animate={{ opacity: 1, scale: 1 }}
-                                  transition={{
-                                      duration: 1.5,
-                                      repeat: Infinity,
-                                      repeatType: "reverse",
-                                      ease: "easeInOut"
-                                  }}
-                                  className="relative"
-                              >
-                                  <Image
-                                      src="/XFitnesslogonob.png"
-                                      alt="XFitness Logo"
-                                      width={150}
-                                      height={50}
-                                      className="filter drop-shadow-[0_0_25px_rgba(252,211,77,0.8)]"
-                                  />
-                              </motion.div>
-                          </div>
-                      </div>
+                        <div className="relative w-full h-full overflow-hidden rounded-[46px] bg-black">
+                            <div className="absolute top-2.5 left-1/2 -translate-x-1/2 h-7 bg-black z-10 flex justify-center items-center rounded-full w-28"></div>
+                            <div className="absolute inset-0 flex items-center justify-center bg-black z-0">
+                                <motion.div
+                                    initial={{ opacity: 0, scale: 0.8 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    transition={{
+                                        duration: 1.5,
+                                        repeat: Infinity,
+                                        repeatType: "reverse",
+                                        ease: "easeInOut"
+                                    }}
+                                    className="relative"
+                                >
+                                    <Image
+                                        src="/XFitnesslogonob.png"
+                                        alt="XFitness Logo"
+                                        width={150}
+                                        height={50}
+                                        className="filter drop-shadow-[0_0_25px_rgba(252,211,77,0.8)]"
+                                    />
+                                </motion.div>
+                            </div>
+                        </div>
                     </div>
                 </div>
               </div>
             </section>
           </AnimatedSection>
           
-          <LogoMarquee />
-
           {/* Membership Plans Section - MODIFIED FOR CLICK HANDLER */}
           <AnimatedSection>
             <section id="membership" className="relative py-24 bg-black/50 backdrop-blur-sm">
@@ -493,29 +455,22 @@ export default function Home() {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
                   {membershipPlans.map((plan) => {
                     const isPopular = plan.isPopular;
-                    // Apply cursor-pointer and hover effect on the entire card wrapper
                     const cardClasses = `relative group cursor-pointer transform transition-transform duration-300 hover:scale-[1.02] ${isPopular ? 'shadow-[0_0_40px_rgba(252,211,77,0.2)]' : ''}`;
                     
                     return (
-                        // Set the click handler on the main card container
                         <div key={plan.name} className={cardClasses} onClick={() => handleCardClick(plan)}>
-                            {/* Glow Effect */}
                             <div className={`absolute inset-0 bg-gradient-to-br from-yellow-400/20 to-yellow-400/5 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 ${isPopular ? 'opacity-75 blur-xl' : ''}`} />
-                            
                             <div className={`relative ${isPopular ? 'bg-zinc-900 border-2 border-yellow-400' : 'bg-black border border-white/10'} rounded-2xl p-8 h-full flex flex-col`}>
-                                {/* Popular Tag */}
                                 {isPopular && (
                                     <div className="absolute -top-4 left-1/2 -translate-x-1/2">
                                         <span className="bg-yellow-400 text-black px-6 py-2 rounded-full font-black text-sm uppercase">Popular</span>
                                     </div>
                                 )}
-                                {/* Bonus Tag */}
                                 {plan.isBonus && (
                                     <div className="absolute -top-3 right-[-10px]">
                                         <span className="bg-green-500 text-white px-3 py-1 rounded-full font-black text-xs uppercase shadow-lg">{plan.isBonus}</span>
                                     </div>
                                 )}
-
                                 <div className="space-y-6 flex-grow">
                                     <div>
                                         <h3 className="text-3xl font-black text-white uppercase mb-2">{plan.name}</h3>
@@ -533,8 +488,6 @@ export default function Home() {
                                         ))}
                                     </ul>
                                 </div>
-                                
-                                {/* The button inside the grid card is now purely visual (the whole card is clickable) */}
                                 <div className="block mt-6">
                                     <Button className={`w-full font-bold py-6 ${isPopular ? 'bg-yellow-400 hover:bg-yellow-500 text-black' : 'bg-zinc-800 hover:bg-zinc-700 text-white'}`}>
                                         Sign Up
@@ -580,7 +533,7 @@ export default function Home() {
                   </div>
                   <div className="relative h-[400px] rounded-lg overflow-hidden border-2 border-yellow-400/20">
                     <iframe
-                      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.484252588398!2d103.65584807496608!3d1.482813598471204!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31da71424615a679%3A0xe33c23c21a48c32c!2sXFitness!5e0!3m2!1sen!2smy!4v1728362309172!5m2!1sen!2smy"
+                      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.484252588398!2d103.65584807496619!3d1.482813598471204!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31da71424615a679%3A0xe33c23c21a48c32c!2sXFitness!5e0!3m2!1sen!2smy!4v1728362309172!5m2!1sen!2smy"
                       width="100%"
                       height="100%"
                       style={{ border: 0 }}
@@ -628,60 +581,10 @@ export default function Home() {
         </div>
 
         {/* Footer (unchanged) */}
-        <footer className="relative z-10 bg-black">
-          <div className="container mx-auto px-6 py-16">
-            <div className="grid md:grid-cols-4 gap-12 mb-12">
-              <div className="space-y-4">
-                <a href="/" className="flex items-center gap-3">
-                  <img src="/XFitnesslogonob.png" alt="XFitness" width={120} height={40} className="h-10 w-auto" />
-                </a>
-                <p className="text-white/60 text-sm leading-relaxed">
-                  Premium equipment, unbeatable vibe, real results.
-                </p>
-              </div>
-              <div>
-                <h4 className="text-white font-black uppercase mb-4">Quick Links</h4>
-                <ul className="space-y-3">
-                  {["Features", "App", "Membership", "Location", "About"].map((link) => (
-                    <li key={link}>
-                      <a href={`#${link.toLowerCase().replace(" ", "-")}`} className="text-white/60 hover:text-yellow-400 transition-colors">
-                        {link}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <div>
-                <h4 className="text-white font-black uppercase mb-4">Support</h4>
-                <ul className="space-y-3">
-                  {["Contact Us", "FAQ", "Terms of Service", "Privacy Policy"].map((link) => (
-                    <li key={link}> <a href="#" className="text-white/60 hover:text-yellow-400 transition-colors"> {link} </a> </li>
-                  ))}
-                </ul>
-              </div>
-              <div>
-                <h4 className="text-white font-black uppercase mb-4">Connect</h4>
-                <div className="flex gap-4">
-                  <a href="https://www.instagram.com/xfitness.my" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-zinc-900 hover:bg-yellow-400 flex items-center justify-center transition-colors group">
-                    <svg className="w-6 h-6 text-white group-hover:text-black transition-colors" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                      <path fillRule="evenodd" d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 012.792 2.792c.247.636.416 1.363.465 2.427.048 1.024.06 1.378.06 3.808s-.012 2.784-.06 3.808c-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-2.792 2.792c-.636.247-1.363.416-2.427.465-1.024.048-1.378.06-3.808.06s-2.784-.013-3.808-.06c-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-2.792-2.792c-.247-.636-.416-1.363-.465-2.427-.048-1.024-.06-1.378-.06-3.808s.012-2.784.06-3.808c.049-1.064.218-1.791.465-2.427a4.902 4.902 0 012.792-2.792c.636-.247 1.363.416 2.427-.465C9.53 2.013 9.884 2 12.315 2zM12 7a5 5 0 100 10 5 5 0 000-10zm0 8a3 3 0 110-6 3 3 0 010 6zm5.75-9.25a1.25 1.25 0 100 2.5 1.25 1.25 0 000-2.5z" clipRule="evenodd" />
-                    </svg>
-                  </a>
-                </div>
-                <div className="mt-6 space-y-2">
-                  <p className="text-white/60 text-sm">Phone: 011-7260 3994</p>
-                </div>
-              </div>
-            </div>
-            <div className="pt-8 border-t border-white/10">
-              <p className="text-white/40 text-sm text-center">© 2025 X Fitness. All rights reserved.</p>
-            </div>
-          </div>
-        </footer>
-      </div>
+       
 
-      {/* RENDER THE MODAL IF A PLAN IS SELECTED */}
-      {selectedPlan && <MembershipModal plan={selectedPlan} onClose={handleCloseModal} />}
+        {selectedPlan && <MembershipModal plan={selectedPlan} onClose={handleCloseModal} />}
+      </div>
     </>
   );
 }

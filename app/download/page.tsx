@@ -89,26 +89,7 @@ const featureCards = [
 export default function DownloadPage() {
   return (
     <div className="bg-black text-white">
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-sm border-b border-yellow-400/20">
-        <div className="container mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <Link href="/" className="flex items-center gap-3">
-              <Image src="/XFitnesslogonob.png" alt="XFitness" width={120} height={40} className="h-10 w-auto" />
-            </Link>
-            <div className="hidden md:flex items-center gap-8">
-              <a href="/#features" className="text-white hover:text-yellow-400 transition-colors font-bold uppercase text-sm tracking-wide">Features</a>
-              <a href="/#membership" className="text-white hover:text-yellow-400 transition-colors font-bold uppercase text-sm tracking-wide">Membership</a>
-              <a href="/#locations" className="text-white hover:text-yellow-400 transition-colors font-bold uppercase text-sm tracking-wide">Location</a>
-              <a href="/#about" className="text-white hover:text-yellow-400 transition-colors font-bold uppercase text-sm tracking-wide">About</a>
-            </div>
-            <div className="flex items-center gap-4">
-              <Link href="/login">
-                <Button variant="ghost" className="text-white hover:text-yellow-400 hover:bg-white/5 font-bold uppercase">Log In</Button>
-              </Link>
-            </div>
-          </div>
-        </div>
-      </nav>
+     
 
       <div className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
         <Image
@@ -230,56 +211,7 @@ export default function DownloadPage() {
         </div>
       </section>
 
-      <footer className="relative z-10 bg-black border-t border-yellow-400/20">
-        <div className="container mx-auto px-6 py-16">
-            <div className="grid md:grid-cols-4 gap-12 mb-12">
-            <div className="space-y-4">
-                <a href="/" className="flex items-center gap-3">
-                <Image src="/XFitnesslogonob.png" alt="XFitness" width={120} height={40} className="h-10 w-auto" />
-                </a>
-                <p className="text-white/60 text-sm leading-relaxed">
-                Premium equipment, unbeatable vibe, real results.
-                </p>
-            </div>
-            <div>
-                <h4 className="text-white font-black uppercase mb-4">Quick Links</h4>
-                <ul className="space-y-3">
-                {["Features", "Membership", "Location", "About"].map((link) => (
-                    <li key={link}>
-                    <a href={`/#${link.toLowerCase()}`} className="text-white/60 hover:text-yellow-400 transition-colors">
-                        {link}
-                    </a>
-                    </li>
-                ))}
-                </ul>
-            </div>
-            <div>
-                <h4 className="text-white font-black uppercase mb-4">Support</h4>
-                <ul className="space-y-3">
-                {["Contact Us", "FAQ", "Terms of Service", "Privacy Policy"].map((link) => (
-                    <li key={link}> <a href="#" className="text-white/60 hover:text-yellow-400 transition-colors"> {link} </a> </li>
-                ))}
-                </ul>
-            </div>
-            <div>
-                <h4 className="text-white font-black uppercase mb-4">Connect</h4>
-                <div className="flex gap-4">
-                <a href="https://www.instagram.com/xfitness.my" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-zinc-900 hover:bg-yellow-400 flex items-center justify-center transition-colors group">
-                    <svg className="w-6 h-6 text-white group-hover:text-black transition-colors" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                    <path fillRule="evenodd" d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 012.792 2.792c.247.636.416 1.363.465 2.427.048 1.024.06 1.378.06 3.808s-.012 2.784-.06 3.808c-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-2.792 2.792c-.636.247-1.363.416-2.427.465-1.024.048-1.378.06-3.808.06s-2.784-.013-3.808-.06c-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-2.792-2.792c-.247-.636-.416-1.363-.465-2.427-.048-1.024-.06-1.378-.06-3.808s.012-2.784.06-3.808c.049-1.064.218-1.791.465-2.427a4.902 4.902 0 012.792-2.792c.636-.247 1.363.416 2.427-.465C9.53 2.013 9.884 2 12.315 2zM12 7a5 5 0 100 10 5 5 0 000-10zm0 8a3 3 0 110-6 3 3 0 010 6zm5.75-9.25a1.25 1.25 0 100 2.5 1.25 1.25 0 000-2.5z" clipRule="evenodd" />
-                    </svg>
-                </a>
-                </div>
-                <div className="mt-6 space-y-2">
-                <p className="text-white/60 text-sm">Phone: 011-7260 3994</p>
-                </div>
-            </div>
-            </div>
-            <div className="pt-8 border-t border-white/10">
-            <p className="text-white/40 text-sm text-center">© 2025 X Fitness. All rights reserved.</p>
-            </div>
-        </div>
-      </footer>
+ 
     </div>
   );
 }
