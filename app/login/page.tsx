@@ -1,13 +1,13 @@
 import { LoginForm } from "@/components/login-form"
 import Image from "next/image"
 import { Info } from "lucide-react"
-
+import { LogoMarquee } from '@/components/LogoMarquee';
 export default function LoginPage() {
   return (
     <div className="min-h-screen flex flex-col bg-black">
       <div className="w-full bg-primary py-3 px-4 flex items-center justify-center gap-2 border-b border-primary/20">
         <span className="text-black font-bold uppercase tracking-wide text-sm md:text-base">
-          OFFER REST OF THE YEAR FREE!
+          ADMIN LOGIN
         </span>
         <Info className="w-5 h-5 text-black" />
       </div>
@@ -29,5 +29,6 @@ export default function LoginPage() {
         </div>
       </div>
     </div>
+    
   )
 }

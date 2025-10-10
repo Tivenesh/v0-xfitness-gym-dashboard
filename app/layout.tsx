@@ -4,14 +4,13 @@ import { GeistMono } from 'geist/font/mono'
 import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 import { DotCursor } from '@/components/DotCursor'
-import { PageTransitionWrapper } from '@/components/PageTransitionWrapper'
 import { Footer } from '@/components/Footer'
-import { Navbar } from '@/components/Navbar' // Import the new Navbar component
+import { Navbar } from '@/components/Navbar'
+import { WhatsAppButton } from '@/components/WhatsAppButton' // Import the new component
 
 export const metadata = {
   title: 'XFitness Gym',
   description: 'Created with v0',
-  generator: 'v0.app',
 }
 
 export default function RootLayout({
@@ -23,11 +22,10 @@ export default function RootLayout({
     <html lang="en">
       <body className="flex flex-col min-h-screen bg-black">
         <DotCursor />
-        <PageTransitionWrapper>
-          <Navbar /> {/* Add the Navbar here, at the top */}
-          <main className="flex-grow">{children}</main>
-          <Footer />
-        </PageTransitionWrapper>
+        <Navbar />
+        <main className="flex-grow pt-24">{children}</main>
+        <Footer />
+        <WhatsAppButton /> {/* Add the button here */}
         <Analytics />
       </body>
     </html>

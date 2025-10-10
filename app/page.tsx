@@ -331,7 +331,7 @@ export default function Home() {
               </div>
             </div>
           </section>
-
+ <LogoMarquee /> 
           {/* Features Section (unchanged) */}
           <AnimatedSection>
             <section id="features" className="relative py-24 bg-black/50 backdrop-blur-sm">
@@ -436,7 +436,7 @@ export default function Home() {
               </div>
             </section>
           </AnimatedSection>
-          
+           <LogoMarquee /> 
           {/* Membership Plans Section - MODIFIED FOR CLICK HANDLER */}
           <AnimatedSection>
             <section id="membership" className="relative py-24 bg-black/50 backdrop-blur-sm">
@@ -501,7 +501,7 @@ export default function Home() {
               </div>
             </section>
           </AnimatedSection>
-          
+           <LogoMarquee /> 
           {/* Location & Hours Section (unchanged) */}
           <AnimatedSection>
             <section id="locations" className="relative py-24 bg-black/50 backdrop-blur-sm">
@@ -546,7 +546,7 @@ export default function Home() {
               </div>
             </section>
           </AnimatedSection>
-
+ <LogoMarquee /> 
           {/* About Section (unchanged) */}
           <AnimatedSection>
             <section id="about" className="relative py-24 bg-black/50 backdrop-blur-sm">
@@ -579,7 +579,7 @@ export default function Home() {
             </section>
           </AnimatedSection>
         </div>
-
+ <LogoMarquee /> 
         {/* Footer (unchanged) */}
        
 
