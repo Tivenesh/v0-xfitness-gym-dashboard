@@ -1,41 +1,36 @@
+"use client"
+
+import { useState, useEffect } from "react"
+import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
-
-const members = [
-  {
-    name: "Ethan Harper",
-    plan: "Premium",
-    status: "Active",
-    joinDate: "2023-01-15",
-  },
-  {
-    name: "Olivia Bennett",
-    plan: "Standard",
-    status: "Active",
-    joinDate: "2023-02-20",
-  },
-  {
-    name: "Noah Carter",
-    plan: "Basic",
-    status: "Inactive",
-    joinDate: "2023-03-01",
-  },
-  {
-    name: "Ava Reynolds",
-    plan: "Premium",
-    status: "Active",
-    joinDate: "2023-04-10",
-  },
-  {
-    name: "Liam Foster",
-    plan: "Standard",
-    status: "Active",
-    joinDate: "2023-05-25",
-  },
-]
+import { Button } from "@/components/ui/button"; // 1. IMPORTED BUTTON
 
 export function AllMembersTable() {
+  const [members, setMembers] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    async function fetchMembers() {
+      setLoading(true);
+      try {
+        const response = await fetch('/api/users');
+        if (!response.ok) {
+          throw new Error('Failed to fetch members');
+        }
+        const data = await response.json();
+        setMembers(data);
+      } catch (error) {
+        console.error('Error fetching members:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchMembers();
+  }, []);
+
   return (
     <Card className="bg-black border-2 border-white/10 hover:border-primary/50 transition-all rounded-none">
       <CardHeader>
@@ -49,12 +44,22 @@ export function AllMembersTable() {
               <TableHead className="text-white/70 font-bold uppercase text-xs">Plan</TableHead>
               <TableHead className="text-white/70 font-bold uppercase text-xs">Status</TableHead>
               <TableHead className="text-white/70 font-bold uppercase text-xs">Join Date</TableHead>
+              {/* 2. ADDED ACTIONS COLUMN HEADER */}
+              <TableHead className="text-right text-white/70 font-bold uppercase text-xs">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {members.map((member) => (
-              <TableRow key={member.name} className="border-white/10 hover:bg-white/5 transition-colors">
-                <TableCell className="font-bold text-white">{member.name}</TableCell>
+            {loading && (
+              <TableRow>
+                <TableCell colSpan={5} className="text-center text-white/50">
+                  Loading members...
+                </TableCell>
+              </TableRow>
+            )}
+            {!loading && members.map((member) => (
+              <TableRow key={member.id} className="border-white/10 hover:bg-white/5 transition-colors">
+                {/* 3. REMOVED LINK FROM NAME */}
+                <TableCell className="font-bold text-white">{member.full_name}</TableCell>
                 <TableCell className="text-white/70">{member.plan}</TableCell>
                 <TableCell>
                   <Badge
@@ -68,7 +73,15 @@ export function AllMembersTable() {
                     {member.status}
                   </Badge>
                 </TableCell>
-                <TableCell className="text-white/70">{member.joinDate}</TableCell>
+                <TableCell className="text-white/70">{member.join_date}</TableCell>
+                {/* 4. ADDED A NEW CELL WITH THE BUTTON */}
+                <TableCell className="text-right">
+                    <Link href={`/dashboard/members/${member.id}`}>
+                        <Button variant="ghost" size="sm" className="text-primary hover:bg-white/10 hover:text-yellow-300">
+                            View / Edit
+                        </Button>
+                    </Link>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>

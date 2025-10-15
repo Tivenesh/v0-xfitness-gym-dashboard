@@ -1,76 +1,41 @@
 "use client"
 
-import { useState } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Search } from "lucide-react"
-
-const subscriptions = [
-  {
-    id: 1,
-    member: "Ethan Harper",
-    plan: "Premium",
-    status: "Active",
-    startDate: "2023-01-15",
-    endDate: "2024-01-15",
-    amount: "$49",
-  },
-  {
-    id: 2,
-    member: "Olivia Bennett",
-    plan: "Standard",
-    status: "Active",
-    startDate: "2023-02-20",
-    endDate: "2024-02-20",
-    amount: "$39",
-  },
-  {
-    id: 3,
-    member: "Noah Carter",
-    plan: "Basic",
-    status: "Expired",
-    startDate: "2023-03-01",
-    endDate: "2024-03-01",
-    amount: "$29",
-  },
-  {
-    id: 4,
-    member: "Ava Reynolds",
-    plan: "Premium",
-    status: "Active",
-    startDate: "2023-04-10",
-    endDate: "2024-04-10",
-    amount: "$49",
-  },
-  {
-    id: 5,
-    member: "Liam Foster",
-    plan: "Elite",
-    status: "Active",
-    startDate: "2023-05-25",
-    endDate: "2024-05-25",
-    amount: "$79",
-  },
-  {
-    id: 6,
-    member: "Emma Wilson",
-    plan: "Basic",
-    status: "Cancelled",
-    startDate: "2023-06-12",
-    endDate: "2024-06-12",
-    amount: "$29",
-  },
-]
+import { useState, useEffect } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Search } from "lucide-react";
+import Link from "next/link";
+import { Button } from "./ui/button";
 
 export function SubscriptionsTable() {
-  const [searchQuery, setSearchQuery] = useState("")
+  const [subscriptions, setSubscriptions] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  useEffect(() => {
+    async function fetchSubscriptions() {
+      setLoading(true);
+      try {
+        const response = await fetch('/api/subscriptions');
+        if (!response.ok) {
+          throw new Error('Failed to fetch subscriptions');
+        }
+        const data = await response.json();
+        setSubscriptions(data);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchSubscriptions();
+  }, []);
 
   const filteredSubscriptions = subscriptions.filter((sub) =>
-    sub.member.toLowerCase().includes(searchQuery.toLowerCase()),
-  )
+    sub.full_name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <Card className="bg-card border-border">
@@ -97,36 +62,38 @@ export function SubscriptionsTable() {
               <TableHead className="text-muted-foreground">Status</TableHead>
               <TableHead className="text-muted-foreground">Start Date</TableHead>
               <TableHead className="text-muted-foreground">End Date</TableHead>
-              <TableHead className="text-muted-foreground">Amount</TableHead>
               <TableHead className="text-muted-foreground text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filteredSubscriptions.map((subscription) => (
-              <TableRow key={subscription.id} className="border-border">
-                <TableCell className="font-medium text-foreground">{subscription.member}</TableCell>
-                <TableCell className="text-muted-foreground">{subscription.plan}</TableCell>
+            {loading && (
+              <TableRow>
+                <TableCell colSpan={6} className="text-center text-muted-foreground">Loading subscriptions...</TableCell>
+              </TableRow>
+            )}
+            {!loading && filteredSubscriptions.map((sub) => (
+              <TableRow key={sub.id} className="border-border">
+                <TableCell className="font-medium text-foreground">{sub.full_name}</TableCell>
+                <TableCell className="text-muted-foreground">{sub.plan}</TableCell>
                 <TableCell>
                   <Badge
-                    variant={subscription.status === "Active" ? "default" : "secondary"}
                     className={
-                      subscription.status === "Active"
-                        ? "bg-green-500/10 text-green-500 hover:bg-green-500/20"
-                        : subscription.status === "Expired"
-                          ? "bg-yellow-500/10 text-yellow-500 hover:bg-yellow-500/20"
-                          : "bg-red-500/10 text-red-500 hover:bg-red-500/20"
+                      sub.status === "Active"
+                        ? "bg-green-500/10 text-green-400"
+                        : "bg-red-500/10 text-red-400"
                     }
                   >
-                    {subscription.status}
+                    {sub.status}
                   </Badge>
                 </TableCell>
-                <TableCell className="text-muted-foreground">{subscription.startDate}</TableCell>
-                <TableCell className="text-muted-foreground">{subscription.endDate}</TableCell>
-                <TableCell className="text-muted-foreground">{subscription.amount}</TableCell>
+                <TableCell className="text-muted-foreground">{sub.join_date}</TableCell>
+                <TableCell className="text-muted-foreground">{sub.end_date}</TableCell>
                 <TableCell className="text-right">
-                  <Button variant="ghost" size="sm" className="text-primary hover:text-primary/80">
-                    View Details
-                  </Button>
+                    <Link href={`/dashboard/members/${sub.id}`}>
+                        <Button variant="ghost" size="sm" className="text-primary hover:bg-white/10 hover:text-yellow-300">
+                            View / Edit
+                        </Button>
+                    </Link>
                 </TableCell>
               </TableRow>
             ))}
@@ -134,5 +101,5 @@ export function SubscriptionsTable() {
         </Table>
       </CardContent>
     </Card>
-  )
+  );
 }

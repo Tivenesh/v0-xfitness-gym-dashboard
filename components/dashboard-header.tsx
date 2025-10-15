@@ -3,7 +3,8 @@
 import { Bell } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { usePathname } from "next/navigation"
+// FIX: ADD THIS IMPORT
+import { usePathname } from "next/navigation" 
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -23,8 +24,19 @@ const pageTitles: Record<string, string> = {
 }
 
 export function DashboardHeader() {
-  const pathname = usePathname()
+  const pathname = usePathname() // This is now defined
   const pageTitle = pageTitles[pathname] || "Dashboard"
+
+  // 1. Add handleLogout function
+  const handleLogout = () => {
+    // --- Simulated Logout Logic ---
+    if (typeof window !== 'undefined') {
+        localStorage.removeItem('isLoggedIn'); 
+    }
+
+    // Redirect to the login page
+    window.location.href = "/login"
+  }
 
   return (
     <header className="h-16 border-b border-white/10 bg-black flex items-center justify-between px-6">
@@ -54,7 +66,15 @@ export function DashboardHeader() {
             <DropdownMenuItem className="text-white/70 hover:text-primary hover:bg-white/5">Profile</DropdownMenuItem>
             <DropdownMenuItem className="text-white/70 hover:text-primary hover:bg-white/5">Settings</DropdownMenuItem>
             <DropdownMenuSeparator className="bg-white/10" />
-            <DropdownMenuItem className="text-white/70 hover:text-primary hover:bg-white/5">Log out</DropdownMenuItem>
+            
+            {/* 2. Attach the handleLogout function to the "Log out" button */}
+            <DropdownMenuItem 
+              onClick={handleLogout} 
+              className="text-white/70 hover:text-primary hover:bg-white/5 cursor-pointer"
+            >
+              Log out
+            </DropdownMenuItem>
+            
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
