@@ -1,13 +1,10 @@
-// next.config.mjs
+// File: next.config.mjs
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Add your environment variables here
-  env: {
-    NEXT_PUBLIC_SUPABASE_URL: "",
-    NEXT_PUBLIC_SUPABASE_ANON_KEY: "",
-    SUPABASE_SERVICE_KEY: "",
-  },
+  // The 'env' block has been removed.
+  // Next.js automatically handles variables prefixed with NEXT_PUBLIC_
+  // from your .env.local file.
   eslint: {
     ignoreDuringBuilds: true,
   },

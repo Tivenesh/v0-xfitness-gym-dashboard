@@ -1,3 +1,5 @@
+// File: components/dashboard-sidebar.tsx
+
 "use client"
 
 import Link from "next/link"
@@ -5,30 +7,41 @@ import Image from "next/image"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { Users, Dumbbell, Calendar, CreditCard, BarChart3, Settings, Receipt, ShieldCheck, MessageSquare } from "lucide-react"
-
-// Mock User for demonstration (Replace with actual authenticated user context/state)
-const mockUser = {
-  role: "Owner", // Change to "Staff" to see the effect
-}
+import { useEffect, useState } from "react"
+// **CHANGE: Import our new client creation function**
+import { createClient } from "@/lib/supabase-browser"
 
 const allNavigation = [
   { name: "Members", href: "/dashboard", icon: Users, roles: ["Owner", "Staff"] },
   { name: "Trainers", href: "/dashboard/trainers", icon: Dumbbell, roles: ["Owner", "Staff"] },
-  { name: "Payments", href: "/dashboard/payments", icon: Receipt, roles: ["Owner", "Staff"] }, // Corrected Icon
+  { name: "Payments", href: "/dashboard/payments", icon: Receipt, roles: ["Owner", "Staff"] },
   { name: "Classes", href: "/dashboard/classes", icon: Calendar, roles: ["Owner", "Staff"] },
-  { name: "Subscriptions", href: "/dashboard/subscriptions", icon: CreditCard, roles: ["Owner"] }, // Owner only
+  { name: "Subscriptions", href: "/dashboard/subscriptions", icon: CreditCard, roles: ["Owner"] },
   { name: "Access Logs", href: "/dashboard/logs", icon: ShieldCheck, roles: ["Owner"] },
-  { name: "Notifications", href: "/dashboard/notifications", icon: MessageSquare, roles: ["Owner", "Staff"] }, // Added roles
-  { name: "Reports", href: "/dashboard/reports", icon: BarChart3, roles: ["Owner"] },         // Owner only
-  { name: "Settings", href: "/dashboard/settings", icon: Settings, roles: ["Owner"] },       // Owner only
-]
+  { name: "Notifications", href: "/dashboard/notifications", icon: MessageSquare, roles: ["Owner", "Staff"] },
+  { name: "Reports", href: "/dashboard/reports", icon: BarChart3, roles: ["Owner"] },
+  { name: "Settings", href: "/dashboard/settings", icon: Settings, roles: ["Owner"] },
+];
 
 export function DashboardSidebar() {
-  const pathname = usePathname()
+  const pathname = usePathname();
+  const [userRole, setUserRole] = useState<string | null>(null);
+  // **CHANGE: Initialize the client using our new function**
+  const supabase = createClient();
+
+  useEffect(() => {
+    const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
+      const role = session?.user?.app_metadata?.role || null;
+      setUserRole(role);
+    });
+
+    return () => {
+      authListener.subscription.unsubscribe();
+    };
+  }, [supabase]);
   
-  // Filter navigation items based on the mock user's role
   const navigation = allNavigation.filter(item => 
-    item.roles.includes(mockUser.role)
+    userRole && item.roles.includes(userRole)
   );
 
   return (
@@ -47,26 +60,33 @@ export function DashboardSidebar() {
       </div>
 
       <nav className="flex-1 p-4 space-y-1">
-        {navigation.map((item) => {
-          const isActive = pathname === item.href
-          const Icon = item.icon
+        {userRole === null ? (
+          <p className="text-white/50 text-center text-sm">Loading...</p>
+        ) : (
+          navigation.map((item) => {
+            const isActive = pathname === item.href;
+            const Icon = item.icon;
 
-          return (
-            <Link
-              key={item.name}
-              href={item.href}
-              className={cn(
-                "flex items-center gap-3 px-3 py-2 rounded-none text-sm font-bold uppercase tracking-wide transition-all",
-                isActive
-                  ? "bg-primary text-black shadow-[0_0_20px_rgba(252,211,77,0.3)]"
-                  : "text-white/70 hover:bg-white/5 hover:text-primary",
-              )}
-            >
-              <Icon className="w-5 h-5" />
-              {item.name}
-            </Link>
-          )
-        })}
+            return (
+              <Link
+                key={item.name}
+                href={item.href}
+                className={cn(
+                  "flex items-center gap-3 px-3 py-2 rounded-none text-sm font-bold uppercase tracking-wide transition-all",
+                  isActive
+                    ? "bg-primary text-black shadow-[0_0_20px_rgba(252,211,77,0.3)]"
+                    : "text-white/70 hover:bg-white/5 hover:text-primary",
+                )}
+              >
+                <Icon className="w-5 h-5" />
+                {item.name}
+              </Link>
+            )
+          })
+        )}
+         {navigation.length === 0 && userRole !== null && (
+          <p className="text-white/50 text-center text-sm">No items to display.</p>
+        )}
       </nav>
     </aside>
   )

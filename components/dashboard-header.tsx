@@ -1,10 +1,12 @@
+// File: components/dashboard-header.tsx
+
 "use client"
 
 import { Bell } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-// FIX: ADD THIS IMPORT
 import { usePathname } from "next/navigation" 
+import Link from "next/link" // Link is imported
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,6 +16,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
+// This maps URL paths to the title displayed in the header
 const pageTitles: Record<string, string> = {
   "/dashboard": "Dashboard",
   "/dashboard/trainers": "Trainers",
@@ -21,22 +24,31 @@ const pageTitles: Record<string, string> = {
   "/dashboard/subscriptions": "Subscriptions",
   "/dashboard/reports": "Reports",
   "/dashboard/settings": "Settings",
+  "/dashboard/profile": "Profile",
+  "/dashboard/payments": "Payments",
+  "/dashboard/notifications": "Notifications",
+  "/dashboard/logs": "Access Logs",
+  "/dashboard/members": "Members", // Covers both Add and Edit Member pages
 }
 
 export function DashboardHeader() {
-  const pathname = usePathname() // This is now defined
-  const pageTitle = pageTitles[pathname] || "Dashboard"
+  const pathname = usePathname()
+  
+  // Find the title that best matches the start of the current path
+  const pageTitle = Object.keys(pageTitles).find(key => pathname.startsWith(key) && key !== "/dashboard")
+    ? pageTitles[Object.keys(pageTitles).find(key => pathname.startsWith(key) && key !== "/dashboard")!]
+    : "Dashboard";
 
-  // 1. Add handleLogout function
-  const handleLogout = () => {
-    // --- Simulated Logout Logic ---
-    if (typeof window !== 'undefined') {
-        localStorage.removeItem('isLoggedIn'); 
+  // Correct logout function that calls the API
+  const handleLogout = async () => {
+    try {
+      await fetch('/api/auth/logout', { method: 'POST' });
+    } catch (error) {
+      console.error('Logout failed:', error);
+    } finally {
+      window.location.href = "/login";
     }
-
-    // Redirect to the login page
-    window.location.href = "/login"
-  }
+  };
 
   return (
     <header className="h-16 border-b border-white/10 bg-black flex items-center justify-between px-6">
@@ -63,11 +75,20 @@ export function DashboardHeader() {
           <DropdownMenuContent align="end" className="w-56 bg-black border-white/10">
             <DropdownMenuLabel className="text-white">My Account</DropdownMenuLabel>
             <DropdownMenuSeparator className="bg-white/10" />
-            <DropdownMenuItem className="text-white/70 hover:text-primary hover:bg-white/5">Profile</DropdownMenuItem>
-            <DropdownMenuItem className="text-white/70 hover:text-primary hover:bg-white/5">Settings</DropdownMenuItem>
+            
+            {/* INTEGRATED LINK TO PROFILE PAGE */}
+            <Link href="/dashboard/profile" passHref>
+              <DropdownMenuItem className="text-white/70 hover:text-primary hover:bg-white/5 cursor-pointer">
+                Profile
+              </DropdownMenuItem>
+            </Link>
+            {/* END OF INTEGRATION */}
+
+            <DropdownMenuItem className="text-white/70 hover:text-primary hover:bg-white/5 cursor-pointer">
+              Settings
+            </DropdownMenuItem>
             <DropdownMenuSeparator className="bg-white/10" />
             
-            {/* 2. Attach the handleLogout function to the "Log out" button */}
             <DropdownMenuItem 
               onClick={handleLogout} 
               className="text-white/70 hover:text-primary hover:bg-white/5 cursor-pointer"

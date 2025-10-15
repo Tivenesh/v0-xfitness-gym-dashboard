@@ -1,18 +1,27 @@
 // File: app/api/auth/logout/route.ts
-
-import { NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
+import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
+import { NextResponse } from 'next/server';
 
 export async function POST(request: Request) {
-  const requestUrl = new URL(request.url);
   const cookieStore = cookies();
-  const supabase = createClient(cookieStore);
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        get(name: string) { return cookieStore.get(name)?.value },
+        set(name: string, value: string, options) { cookieStore.set({ name, value, ...options }) },
+        remove(name: string, options) { cookieStore.set({ name, value: '', ...options }) },
+      },
+    }
+  );
 
-  // Sign out the user
-  await supabase.auth.signOut();
+  const { data: { session } } = await supabase.auth.getSession();
 
-  return NextResponse.redirect(`${requestUrl.origin}/login`, {
-    status: 302,
-  });
+  if (session) {
+    await supabase.auth.signOut();
+  }
+
+  return NextResponse.json({ message: 'Logged out successfully' }, { status: 200 });
 }
