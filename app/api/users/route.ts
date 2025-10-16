@@ -2,12 +2,11 @@
 
 import { supabaseServer } from '@/lib/supabaseServer';
 import { NextResponse } from 'next/server';
-import { createServerClient } from '@supabase/ssr'; // Correct import
+import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 
 export async function GET(request: Request) {
   const cookieStore = cookies();
-  // Correct client initialization
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -19,18 +18,24 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  // Handle Search Query
+  // Handle both Search and Filter Queries
   const { searchParams } = new URL(request.url);
   const searchQuery = searchParams.get('search');
+  const statusQuery = searchParams.get('status');
   
-  // Use the admin client for the actual data fetching
   let query = supabaseServer
     .from('members')
     .select('*')
     .order('created_at', { ascending: false });
 
+  // Add search filter if it exists
   if (searchQuery) {
     query = query.ilike('full_name', `%${searchQuery}%`);
+  }
+  
+  // Add status filter if it exists and is not 'All'
+  if (statusQuery && statusQuery !== 'All') {
+    query = query.eq('status', statusQuery);
   }
   
   const { data: members, error } = await query;
@@ -42,8 +47,6 @@ export async function GET(request: Request) {
   return NextResponse.json(members);
 }
 
-// Your POST function can remain the same, but it's good practice to add auth checks to it as well.
-// For now, we will leave it as is to fix the immediate problem.
 export async function POST(request: Request) {
   try {
     const body = await request.json();

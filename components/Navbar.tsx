@@ -9,7 +9,7 @@ import Link from "next/link";
 
 const navLinks = [
   { href: "/", label: "Home" },
-   { href: "/login", label: "Log In" },
+   { href: "/login", label: "Admin" },
   { href: "/#features", label: "Features" },
   { href: "/#app", label: "App" },
   { href: "/#membership", label: "Membership" },
