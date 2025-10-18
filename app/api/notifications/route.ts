@@ -1,36 +1,27 @@
-// app/api/notifications/route.ts
+// app/api/reports/revenue/route.ts
 
-import { supabaseServer } from '@/lib/supabaseServer';
+import { createClient } from '@/lib/supabase/server';
 import { NextResponse } from 'next/server';
 
-export async function POST(request: Request) {
+export async function GET() {
+  const supabase = createClient();
+  const { data: { session } } = await supabase.auth.getSession();
+
+  // Protect the route - only logged-in users can access it
+  if (!session) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
   try {
-    const { title, message, recipientGroup } = await request.json();
-
-    if (!title || !message || !recipientGroup) {
-      return NextResponse.json({ error: 'Title, message, and recipient group are required' }, { status: 400 });
-    }
-
-    // You can add logic here to count members based on the recipientGroup
-    // For now, we'll just save the group name and a placeholder count.
-    const recipient_count = 0; // Placeholder
-
-    const { data, error } = await supabaseServer
-      .from('notifications')
-      .insert({
-        title,
-        body: message,
-        recipient_group: recipientGroup, // Save the selected group
-        recipient_count,
-      })
-      .select()
-      .single();
+    // Call the database function we created earlier
+    const { data: revenueData, error } = await supabase.rpc('get_monthly_revenue');
 
     if (error) {
+      console.error("Supabase RPC Error:", error);
       throw new Error(error.message);
     }
 
-    return NextResponse.json(data);
+    return NextResponse.json(revenueData);
 
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });

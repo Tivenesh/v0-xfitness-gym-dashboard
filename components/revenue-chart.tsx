@@ -1,12 +1,12 @@
 "use client"
 
 import { useState, useEffect } from "react";
-import { Bar, BarChart, CartesianGrid, XAxis } from "recharts"
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts" // Added YAxis import
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
 
 const chartConfig = {
-  revenue: { label: "Revenue", color: "#facc15" },
+  revenue: { label: "Revenue (RM)", color: "#facc15" }, // Updated label
 };
 
 export function RevenueChart() {
@@ -35,8 +35,8 @@ export function RevenueChart() {
   return (
     <Card className="bg-black border-2 border-white/10">
       <CardHeader>
-        <CardTitle className="text-white">Revenue Overview</CardTitle>
-        <CardDescription className="text-gray-400">Monthly revenue for the current year</CardDescription>
+        <CardTitle className="text-white">Monthly Revenue</CardTitle>
+        <CardDescription className="text-gray-400">Total successful revenue for the current year</CardDescription>
       </CardHeader>
       <CardContent>
         {loading ? (
@@ -48,8 +48,13 @@ export function RevenueChart() {
             <BarChart accessibilityLayer data={chartData}>
               <CartesianGrid vertical={false} stroke="rgba(255,255,255,0.1)" />
               <XAxis dataKey="month" tickLine={false} tickMargin={10} axisLine={false} tick={{ fill: '#facc15' }} />
-              <ChartTooltip cursor={false} content={<ChartTooltipContent indicator="line" />} />
-              <Bar dataKey="revenue" fill="#facc15" radius={8} />
+              {/* Added YAxis for clarity */}
+              <YAxis tick={{ fill: '#facc15' }} tickFormatter={(value) => `RM ${value / 1000}k`} />
+              <ChartTooltip
+                cursor={false}
+                content={<ChartTooltipContent indicator="line" labelKey="revenue" />}
+              />
+              <Bar dataKey="revenue" fill="#facc15" radius={4} />
             </BarChart>
           </ChartContainer>
         )}

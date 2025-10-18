@@ -3,21 +3,24 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from 'next/link'; // Make sure Link is imported
+import { Plus, Download, Edit } from "lucide-react"; // Import Plus, Download, and Edit icons
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Download } from "lucide-react"; // Import the Download icon
-import Papa from "papaparse"; // Import the CSV library
+import Papa from "papaparse";
+import { createClient } from "@/lib/supabase-browser"; // Import Supabase client
 
 export function PaymentsTable() {
   const [payments, setPayments] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [updatingId, setUpdatingId] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [userRole, setUserRole] = useState<string | null>(null); // State for user role
+  const supabase = createClient(); // Initialize Supabase client
 
   const fetchPayments = async () => {
-    // We can keep this loading logic as it is
     setLoading(true);
     setError(null);
     try {
@@ -34,31 +37,61 @@ export function PaymentsTable() {
 
   useEffect(() => {
     fetchPayments();
-  }, []);
 
+    // Fetch the user role when component mounts
+    const fetchUserRole = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      setUserRole(session?.user?.app_metadata?.role || null);
+    };
+    fetchUserRole();
+
+    // Listen for auth changes to update role if needed (optional but good practice)
+    const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
+        setUserRole(session?.user?.app_metadata?.role || null);
+    });
+
+    // Cleanup listener on component unmount
+    return () => {
+      authListener?.subscription?.unsubscribe();
+    };
+
+  }, [supabase]); // Add supabase to dependency array
+
+  // --- OPTIMISTIC UI UPDATE FUNCTION ---
   const handleUpdateStatus = async (paymentId: number, newStatus: 'Success' | 'Failed') => {
-    // This function remains the same
+    const originalPayments = [...payments]; // Keep a backup
+
+    // Update UI optimistically
+    setPayments(currentPayments =>
+      currentPayments.map(p =>
+        p.id === paymentId ? { ...p, status: newStatus } : p
+      )
+    );
     setUpdatingId(paymentId);
     setError(null);
+
     try {
+      // Make API call in background
       const response = await fetch(`/api/payments/${paymentId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: newStatus }),
       });
+
       if (!response.ok) {
-         const errorData = await response.json();
-         throw new Error(errorData.error || `Failed to update status`);
+        const errorData = await response.json();
+        throw new Error(errorData.error || `Failed to update status`);
       }
-      fetchPayments();
     } catch (err: any) {
+      // Revert UI on failure
       setError(err.message);
+      setPayments(originalPayments);
+      alert(`Error: ${err.message}`);
     } finally {
       setUpdatingId(null);
     }
   };
 
-  // --- NEW: Function to handle exporting payments data to CSV ---
   const handleExport = () => {
     if (payments.length === 0) {
       alert("No payment data to export.");
@@ -67,7 +100,7 @@ export function PaymentsTable() {
 
     const dataToExport = payments.map(p => ({
       "Transaction ID": p.id,
-      "Member Name": p.members.full_name,
+      "Member Name": p.members?.full_name ?? 'N/A', // Handle potential null member
       "Plan": p.plan_name,
       "Amount": p.amount,
       "Transaction Date": p.transaction_date,
@@ -89,13 +122,24 @@ export function PaymentsTable() {
   return (
     <Card className="bg-black border-2 border-white/10">
       <CardHeader>
-        {/* --- NEW: Header updated with Export Button --- */}
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between items-center flex-wrap gap-4">
           <CardTitle className="text-white font-black uppercase tracking-wide">All Transactions</CardTitle>
-          <Button onClick={handleExport} variant="outline" size="sm" className="text-primary border-primary hover:bg-primary/10 hover:text-white font-bold">
-            <Download className="h-4 w-4 mr-2" />
-            Export CSV
-          </Button>
+          
+          <div className="flex items-center gap-4">
+            {/* Add Manual Payment Button */}
+            <Link href="/dashboard/payments/add">
+              <Button size="sm" className="bg-primary text-black hover:bg-primary/90 font-bold">
+                <Plus className="h-4 w-4 mr-2" />
+                Add Manual Payment
+              </Button>
+            </Link>
+
+            {/* Export CSV Button */}
+            <Button onClick={handleExport} variant="outline" size="sm" className="text-primary border-primary hover:bg-primary/10 hover:text-white font-bold">
+              <Download className="h-4 w-4 mr-2" />
+              Export CSV
+            </Button>
+          </div>
         </div>
       </CardHeader>
       <CardContent>
@@ -129,16 +173,28 @@ export function PaymentsTable() {
                     </Badge>
                   </TableCell>
                   <TableCell className="text-right">
-                    {payment.status === 'Pending' && (
-                      <div className="flex gap-2 justify-end">
-                        <Button onClick={() => handleUpdateStatus(payment.id, 'Success')} size="sm" className="bg-green-600 hover:bg-green-700 text-white font-bold" disabled={updatingId === payment.id}>
-                          {updatingId === payment.id ? '...' : 'Approve'}
-                        </Button>
-                        <Button onClick={() => handleUpdateStatus(payment.id, 'Failed')} variant="destructive" size="sm" className="font-bold" disabled={updatingId === payment.id}>
-                          {updatingId === payment.id ? '...' : 'Reject'}
-                        </Button>
-                      </div>
-                    )}
+                    <div className="flex gap-1 justify-end items-center"> {/* Adjusted gap and items-center */}
+                      {/* Logic for Approve/Reject buttons */}
+                      {payment.status === 'Pending' && (
+                        <>
+                          <Button onClick={() => handleUpdateStatus(payment.id, 'Success')} size="sm" className="bg-green-600 hover:bg-green-700 text-white font-bold h-8 px-3" disabled={updatingId === payment.id}> {/* Adjusted size */}
+                            {updatingId === payment.id ? '...' : 'Approve'}
+                          </Button>
+                          <Button onClick={() => handleUpdateStatus(payment.id, 'Failed')} variant="destructive" size="sm" className="font-bold h-8 px-3" disabled={updatingId === payment.id}> {/* Adjusted size */}
+                            {updatingId === payment.id ? '...' : 'Reject'}
+                          </Button>
+                        </>
+                      )}
+                      
+                      {/* NEW: Edit Button for Owners */}
+                      {userRole === 'Owner' && (
+                         <Link href={`/dashboard/payments/edit/${payment.id}`} passHref>
+                            <Button variant="ghost" size="icon" className="text-white/70 hover:text-primary hover:bg-white/10 h-8 w-8"> {/* Adjusted size */}
+                                <Edit className="h-4 w-4" />
+                            </Button>
+                         </Link>
+                      )}
+                    </div>
                   </TableCell>
                 </TableRow>
               ))
