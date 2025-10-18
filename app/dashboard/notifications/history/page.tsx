@@ -10,7 +10,7 @@ export default function NotificationHistoryPage() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold text-white">Notification History</h1>
+          <h1 className="text-3xl font-bold text-white"></h1>
           <p className="text-gray-400 mt-1">
             A log of all past announcements sent to members.
           </p>

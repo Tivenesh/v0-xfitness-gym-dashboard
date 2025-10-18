@@ -11,7 +11,7 @@ export default function DashboardPage() {
     <div className="space-y-6">
       {/* 4. ADDED THIS NEW SECTION */}
       <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold text-foreground">Dashboard</h1>
+        <h1 className="text-3xl font-bold text-foreground"></h1>
         <Link href="/dashboard/members">
           <Button className="bg-primary text-primary-foreground hover:bg-primary/90">
             <UserPlus className="mr-2 h-4 w-4" />
