@@ -115,7 +115,7 @@ export async function PUT(
     }
 }
 
-// --- DELETE Handler: Removes a class (Owner only) ---
+// --- DELETE Handler: Removes a class (Owner only) --- // done.
 export async function DELETE(
   request: Request,
   { params }: { params: { id: string } }
